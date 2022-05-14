@@ -1,108 +1,42 @@
 package pl.edu.mimuw.matrix;
 
-public class Diagonal extends GenericMatrix {
+public class Diagonal extends GenericDiagonal {
 
     private final double[] diagonalValues;
 
-    public Diagonal(double... diagonalValues) {
-        super(Shape.matrix(diagonalValues.length, diagonalValues.length));
+    protected Diagonal(double... diagonalValues) {
+        super(diagonalValues.length);
         this.diagonalValues = diagonalValues;
     }
 
-    private double getDiagonalValues(int index){
-        return 
+    public IDoubleMatrix getCopy() {
+        return DoubleMatrixFactory.diagonal(this.diagonalValues);
     }
 
-    public double get(int row, int column) {
-        shape.assertInShape(row, column);
-        if (row != column) {
-            return 0;
-        }
-        return this.diagonalValues[row];
+    protected double getDiagonalValues(int index) {
+        return this.diagonalValues[index];
     }
 
-    public IDoubleMatrix times(IDoubleMatrix other){
-        this.shape.assertMultiplyable(other.shape());
-        Shape newShape = this.shape.shapeAfterMultiply(other.shape());
-        if(other instanceof Diagonal){
-            double[] newDiagonalValues = new double[newShape.rows];
-            for(int i = 0; i<newShape.rows; i++){
-                newDiagonalValues[i] = this.diagonalValues[i]*other.get(i, i);
-            }
-            return DoubleMatrixFactory.diagonal(newDiagonalValues);
-        }
-        if(other instanceof Identity){
+    public IDoubleMatrix times(IDoubleMatrix other) {
+        assertTimes(other);
+        if (other.getClass().equals(Identity.class)) {
             return DoubleMatrixFactory.diagonal(this.diagonalValues);
         }
-        double[][] newData = new double[newShape.rows][newShape.columns];
-        for(int i = 0; i<newShape.rows; i++){
-            for(int j = 0; j<newShape.columns; j++){
-                newData[i][j]=diagonalValues[i]*other.get(i, j);
-            }
-        }
-        return DoubleMatrixFactory.full(newData);
-    }
-
-    public IDoubleMatrix plus(IDoubleMatrix other){
-        assert this.shape.equals(other);
-        if(other instanceof Diagonal){
+        if (other.getClass().equals(this.getClass())) {
             double[] newDiagonalValues = new double[this.shape.rows];
-            for(int i = 0; i<this.shape.rows; i++){
-                newDiagonalValues[i] = this.diagonalValues[i]+other.get(i, i);
+            Diagonal temp = (Diagonal) other;
+            for (int i = 0; i < this.shape.rows; i++) {
+                newDiagonalValues[i] = this.getDiagonalValues(i) * temp.getDiagonalValues(i);
             }
             return DoubleMatrixFactory.diagonal(newDiagonalValues);
-        }
-        if(other instanceof Identity){
-            return DoubleMatrixFactory.diagonal(this.diagonalValues);
         }
         double[][] newData = other.data();
-        for(int i = 0; i<this.shape.rows; i++){
-                newData[i][i]+=diagonalValues[i];
-        }
-        return DoubleMatrixFactory.full(newData);
-    }
-
-    public IDoubleMatrix minus(IDoubleMatrix other){
-        assert this.shape.equals(other);
-        if(other instanceof Diagonal){
-            double[] newDiagonalValues = new double[this.shape.rows];
-            for(int i = 0; i<this.shape.rows; i++){
-                newDiagonalValues[i] = this.diagonalValues[i]-other.get(i, i);
+        for (int i = 0; i < this.shape.rows; i++) {
+            for (int j = 0; j < this.shape.columns; j++) {
+                newData[i][j] *= getDiagonalValues(i);
             }
-            return DoubleMatrixFactory.diagonal(newDiagonalValues);
-        }
-        if(other instanceof Identity){
-            return DoubleMatrixFactory.diagonal(this.diagonalValues);
-        }
-        double[][] newData = other.data();
-        for(int i = 0; i<this.shape.rows; i++){
-                newData[i][i]-=diagonalValues[i];
         }
         return DoubleMatrixFactory.full(newData);
-    }
-
-    public IDoubleMatrix times(double scalar) {
-        double[] newDiagonalValues = this.diagonalValues;
-        for (int i = 0; i < diagonalValues.length; i++) {
-            newDiagonalValues[i] *= scalar;
-        }
-        return DoubleMatrixFactory.diagonal(newDiagonalValues);
-    }
-
-    public IDoubleMatrix plus(double scalar) {
-        double[] newDiagonalValues = this.diagonalValues;
-        for (int i = 0; i < diagonalValues.length; i++) {
-            newDiagonalValues[i] += scalar;
-        }
-        return DoubleMatrixFactory.diagonal(newDiagonalValues);
-    }
-
-    public IDoubleMatrix minus(double scalar) {
-        double[] newDiagonalValues = this.diagonalValues;
-        for (int i = 0; i < diagonalValues.length; i++) {
-            newDiagonalValues[i] -= scalar;
-        }
-        return DoubleMatrixFactory.diagonal(newDiagonalValues);
     }
 
     public double normOne() {
@@ -117,10 +51,10 @@ public class Diagonal extends GenericMatrix {
         return this.normOne();
     }
 
-    public double frobeniusNorm(){
+    public double frobeniusNorm() {
         double result = 0;
-        for(double cur: this.diagonalValues){
-            result += cur*cur;
+        for (double cur : this.diagonalValues) {
+            result += cur * cur;
         }
         return Math.sqrt(result);
     }

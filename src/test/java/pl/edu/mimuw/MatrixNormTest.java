@@ -8,7 +8,6 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 
 import static java.lang.Math.sqrt;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static pl.edu.mimuw.matrix.DoubleMatrixFactory.*;
 import static pl.edu.mimuw.matrix.MatrixCellValue.cell;

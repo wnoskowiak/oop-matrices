@@ -6,37 +6,31 @@ public class Zero extends GenericMatrix {
         super(shape);
     }
 
+    public IDoubleMatrix getCopy() {
+        return DoubleMatrixFactory.zero(this.shape);
+    }
+
     public IDoubleMatrix times(IDoubleMatrix other) {
         shape.assertMultiplyable(other.shape());
         return DoubleMatrixFactory.zero(shape.shapeAfterMultiply(other.shape()));
     }
 
     public IDoubleMatrix times(double scalar) {
-        return this;
+        return this.getCopy();
     }
 
     public IDoubleMatrix plus(IDoubleMatrix other) {
-        assert this.shape.equals(other.shape());
-        return other;
+        this.assertPlus(other);
+        return other.getCopy();
     }
 
     public IDoubleMatrix plus(double scalar) {
-        shape.assertSquare();
+        this.assertPlus(scalar);
         return DoubleMatrixFactory.diagonal(scalar);
     }
 
-    public IDoubleMatrix minus(IDoubleMatrix other) {
-        assert this.shape.equals(other.shape());
-        return other.times(-1);
-    }
-
-    public IDoubleMatrix minus(double scalar) {
-        shape.assertSquare();
-        return DoubleMatrixFactory.diagonal(-scalar);
-    }
-
     public double get(int row, int column) {
-        shape.assertInShape(row, column);
+        this.assertGet(row, column);
         return 0;
     }
 

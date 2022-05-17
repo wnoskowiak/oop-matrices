@@ -107,25 +107,12 @@ public class AntiDiagonal extends OneDimDegenerated{
         return Math.sqrt(result);
     }
 
-    private String getZeros(int i) {
-        switch (i) {
-            case 0:
-                return "";
-            case 1:
-                return "0 ";
-            case 2:
-                return "0 0 ";
-            default:
-                return "0···0 ";
-        }
-    }
-
     public String toString() {
         printDimentions();
         String result = "";
         for (int i = 0; i < this.shape.rows; i++) {
-            result += this.getZeros(this.shape.columns -1-i) + Double.toString(this.getValue(this.shape.columns -1-i)) + " "
-                    + this.getZeros(i) + "\n";
+            result += this.getChar(this.shape.columns -1-i, "0") + Double.toString(this.getValue(this.shape.columns -1-i)) + " "
+                    + this.getChar(i,"0") + "\n";
         }
         return result;
     }

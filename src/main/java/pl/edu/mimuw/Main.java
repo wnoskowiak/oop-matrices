@@ -7,6 +7,8 @@ import pl.edu.mimuw.matrix.Shape;
 
 public class Main {
 
+  // Do napisania implementacji używałem Visual Studio Code
+
   public static void main(String[] args) {
     System.out.println("Macierz jednostkowa:\n");
     IDoubleMatrix iden = DoubleMatrixFactory.identity(10);

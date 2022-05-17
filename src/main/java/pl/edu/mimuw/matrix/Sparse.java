@@ -2,7 +2,6 @@ package pl.edu.mimuw.matrix;
 
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class Sparse extends GenericMatrix{
 
@@ -11,7 +10,6 @@ public class Sparse extends GenericMatrix{
     private Sparse(Shape shape, ArrayList<MatrixCellValue> values){
         super(shape);
         ArrayList<MatrixCellValue> vals = new ArrayList<MatrixCellValue>(values);
-        Collections.sort(vals, MatrixCellValue.MatrixCellValueComparator);
         this.values = vals;
     }
 
@@ -108,22 +106,6 @@ public class Sparse extends GenericMatrix{
         }
         return Sparse.makeSparse(this.shape, newValues);
     }
-
-    // public IDoubleMatrix plus(double scalar) {
-    //     this.assertPlus(scalar);
-    //     int temp;
-    //     MatrixCellValue tmp;
-    //     ArrayList<MatrixCellValue> vals =  new ArrayList<MatrixCellValue>(this.values);
-    //     for(int i = 0; i<this.shape.rows; i++) {
-    //         temp = this.getIndex(i,i);
-    //         if(temp< 0){
-    //             vals.add(new MatrixCellValue(i, i, scalar));
-    //         }
-    //         tmp = new MatrixCellValue(i, i, scalar + this.values.get(temp).value);
-    //         vals.set(temp, tmp);
-    //     }
-    //     return new Sparse(this.shape, vals);
-    // }
 
     public double normInfinity() {
         double result = Double.MIN_VALUE, temp;

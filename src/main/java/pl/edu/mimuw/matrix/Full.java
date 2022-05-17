@@ -14,7 +14,7 @@ public class Full extends GenericMatrix {
         }
     }
 
-    public static Full MakeFull(double[][] values){
+    public static Full makeFull(double[][] values){
         assert values != null;
         assert (values.length!=0);
         for(int i = 1; i<values.length; i++){
@@ -53,27 +53,15 @@ public class Full extends GenericMatrix {
         if (!other.getClass().equals(this.getClass())) {
             return other.plus(this);
         }
-        Full nOther = (Full) other;
+        // Full nOther = (Full) other;
         double[][] newData = this.data();
         for (int i = 0; i < this.shape.rows; i++) {
             for (int j = 0; j < this.shape.columns; j++) {
-                newData[i][j] += nOther.data[i][j];
+                newData[i][j] += other.get(i,j);
             }
         }
         return DoubleMatrixFactory.full(newData);
     }
-
-    // public IDoubleMatrix plus(double scalar) {
-    //     // this.assertPlus(scalar);
-    //     if (scalar == 0) {
-    //         return this.getCopy();
-    //     }
-    //     double[][] newData = this.data();
-    //     for (int i = 0; i < this.shape.rows; i++) {
-    //         newData[i][i] += scalar;
-    //     }
-    //     return DoubleMatrixFactory.full(newData);
-    // }
 
     public IDoubleMatrix times(IDoubleMatrix other) {
         this.assertTimes(other);

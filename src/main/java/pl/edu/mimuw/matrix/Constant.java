@@ -1,28 +1,30 @@
 package pl.edu.mimuw.matrix;
 
-public class Constant extends GenericDegeneratedMatrix {
+public class Constant extends ZeroDimDegenerated {
 
-    private final double value;
+    protected Constant(Shape shape,double value){
+        super(shape, value);
+    }
 
-    Constant(Shape shape,double value){
-        super(shape);
-        this.value = value;
+    public static Constant makeConstant(Shape shape,double value){
+        assert shape != null & shape.rows>0 & shape.columns>0;
+        return new Constant(shape, value);
     }
 
     public IDoubleMatrix getCopy(){
-        return new Constant(shape,value);
+        return new Constant(shape,this.getValue());
+    }
+
+    protected IDoubleMatrix switchData(double... data){
+        return new Constant(this.shape, data[0]);
     }
 
     public IDoubleMatrix plus(double scalar){
-        return new Constant(this.shape, this.value+scalar);
-    }
-
-    public IDoubleMatrix times(double scalar){
-        return new Constant(this.shape, this.value*scalar);
+        return new Constant(this.shape, this.getValue()+scalar);
     }
 
     public double getValue(int i){
-        return this.value;
+        return this.getValue();
     }
 
     public double get(int row, int column){
@@ -35,10 +37,10 @@ public class Constant extends GenericDegeneratedMatrix {
         double[][] newData = other.data();
         for(int i = 0; i<this.shape.rows; i++){
             for(int j = 0; j<this.shape.columns; j++){
-                newData[i][j] += this.value; 
+                newData[i][j] += this.getValue(); 
             }
         }
-        return Full.MakeFull(newData);
+        return Full.makeFull(newData);
     }
 
     public IDoubleMatrix times(IDoubleMatrix other) {
@@ -46,17 +48,6 @@ public class Constant extends GenericDegeneratedMatrix {
         if (other.getClass().equals(Identity.class)) {
             return this.getCopy();
         }
-        // if (other.getClass().equals(Diagonal.class)) {
-        //     double[][] newData = this.data();
-        //     Diagonal newOther = (Diagonal) other;
-        //     for (int i = 0; i < this.shape.rows; i++) {
-        //         for (int j = 0; j < this.shape.columns; j++) {
-        //             newData[i][j] *= newOther.getValue(j);
-        //         }
-
-        //     }
-        //     return DoubleMatrixFactory.full(newData);
-        // }
         Shape newShape = this.shape.shapeAfterMultiply(other.shape());
         double[][] newData = new double[newShape.rows][newShape.columns];
         double temp;
@@ -66,37 +57,26 @@ public class Constant extends GenericDegeneratedMatrix {
                 for (int k = 0; k < this.shape.columns; k++) {
                     temp += other.get(k, j);
                 }
-                newData[i][j] = this.getValue(i)*temp;
+                newData[i][j] = this.getValue()*temp;
             }
         }
         return DoubleMatrixFactory.full(newData);
     }
 
     public double frobeniusNorm() {
-        return Math.sqrt(this.shape.columns * this.shape.rows * value);
+        return Math.sqrt(this.shape.columns * this.shape.rows * this.getValue());
     }
 
     public double normOne() {
-        return  Math.abs(this.shape.rows*value);
+        return  Math.abs(this.shape.rows*this.getValue());
     }
 
     public double normInfinity() {
-        return  Math.abs(this.shape.columns*value);
+        return  Math.abs(this.shape.columns*this.getValue());
     }
 
     public String toString() {
-        String helpeString;
-        String sign = Double.toString(this.value);
-        switch (this.shape().columns) {
-            case 1:
-                helpeString = sign;
-                break;
-            case 2:
-                helpeString = sign + " " + sign;
-                break;
-            default:
-                helpeString = sign +" ··· "+ sign;
-        }
+        String helpeString = this.getChar(this.shape.columns,Double.toString(this.getValue())) + "\n";
         return new String(new char[this.shape().rows]).replace("\0", helpeString);
     }
     

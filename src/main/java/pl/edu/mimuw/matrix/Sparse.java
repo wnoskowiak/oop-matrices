@@ -15,7 +15,7 @@ public class Sparse extends GenericMatrix{
         this.values = vals;
     }
 
-    public static Sparse newSparse(Shape shape, MatrixCellValue... values){
+    public static Sparse makeSparse(Shape shape, MatrixCellValue... values){
         for(MatrixCellValue elem : values){
             shape.assertInShape(elem.row,elem.column);
         }
@@ -44,7 +44,7 @@ public class Sparse extends GenericMatrix{
             for(int i = 0; i<newShape.columns; i++)
             newData[elem.row][i] += elem.value*other.get(elem.column,i);
         }
-        return Full.MakeFull(newData);
+        return Full.makeFull(newData);
     }
 
     public IDoubleMatrix getCopy() {

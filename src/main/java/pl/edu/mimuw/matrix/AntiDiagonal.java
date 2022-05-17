@@ -1,20 +1,26 @@
 package pl.edu.mimuw.matrix;
 
-public class AntiDiagonal extends GenericDegeneratedMatrix{
-
-    private final double[] diagonalValues;
+public class AntiDiagonal extends OneDimDegenerated{
 
     public IDoubleMatrix getCopy(){
-        return DoubleMatrixFactory.antiDiagonal(this.diagonalValues);
+        return DoubleMatrixFactory.antiDiagonal(this.values);
     }
 
-    protected AntiDiagonal(double... diagonalValues) {
-        super(Shape.matrix(diagonalValues.length, diagonalValues.length));
-        this.diagonalValues = diagonalValues;
+    private AntiDiagonal(double... diagonalValues) {
+        super(Shape.matrix(diagonalValues.length, diagonalValues.length), diagonalValues);
+    }
+
+    public static AntiDiagonal makeAntiDiagonal(double... diagonalValues){
+        assert diagonalValues.length > 0;
+        return new AntiDiagonal(diagonalValues);
+    }
+
+    protected IDoubleMatrix switchData(double... data){
+        return DoubleMatrixFactory.antiDiagonal(data);
     }
 
     protected double getValue(int index) {
-        return this.diagonalValues[index];
+        return this.values[index];
     }
 
     public double get(int row, int column) {
@@ -24,17 +30,6 @@ public class AntiDiagonal extends GenericDegeneratedMatrix{
         }
         return getValue(row);
     }
-
-    // public IDoubleMatrix plus(double scalar) {
-    //     if (scalar == 0) {
-    //         return this.getCopy();
-    //     }
-    //     double[] newDiagonalValues = new double[this.shape.rows];
-    //     for (int i = 0; i < this.shape.rows; i++) {
-    //         newDiagonalValues[i] = scalar + this.getValue(i);
-    //     }
-    //     return DoubleMatrixFactory.diagonal(newDiagonalValues);
-    // }
 
     public IDoubleMatrix plus(IDoubleMatrix other) {
         this.assertPlus(other);
@@ -59,7 +54,7 @@ public class AntiDiagonal extends GenericDegeneratedMatrix{
     public IDoubleMatrix times(IDoubleMatrix other) {
         assertTimes(other);
         if (other.getClass().equals(Identity.class)) {
-            return DoubleMatrixFactory.antiDiagonal(this.diagonalValues);
+            return DoubleMatrixFactory.antiDiagonal(this.values);
         }
         if (other.getClass().equals(this.getClass())) {
             double[] newDiagonalValues = new double[this.shape.rows];
@@ -92,23 +87,9 @@ public class AntiDiagonal extends GenericDegeneratedMatrix{
         return DoubleMatrixFactory.full(newData);
     }
 
-    public IDoubleMatrix times(double scalar) {
-        if (scalar == 0) {
-            return DoubleMatrixFactory.zero(this.shape);
-        }
-        if (scalar == 1) {
-            return this.getCopy();
-        }
-        double[] newDiagonalValues = new double[this.shape.rows];
-        for (int i = 0; i < this.shape.rows; i++) {
-            newDiagonalValues[i] = scalar * this.getValue(i);
-        }
-        return DoubleMatrixFactory.antiDiagonal(newDiagonalValues);
-    }
-
     public double normOne() {
         double max = Double.NEGATIVE_INFINITY;
-        for (double cur : this.diagonalValues) {
+        for (double cur : this.values) {
             max = Math.max(max, Math.abs(cur));
         }
         return max;
@@ -120,10 +101,33 @@ public class AntiDiagonal extends GenericDegeneratedMatrix{
 
     public double frobeniusNorm() {
         double result = 0;
-        for (double cur : this.diagonalValues) {
+        for (double cur : this.values) {
             result += cur * cur;
         }
         return Math.sqrt(result);
+    }
+
+    private String getZeros(int i) {
+        switch (i) {
+            case 0:
+                return "";
+            case 1:
+                return "0 ";
+            case 2:
+                return "0 0 ";
+            default:
+                return "0···0 ";
+        }
+    }
+
+    public String toString() {
+
+        String result = "";
+        for (int i = 0; i < this.shape.rows; i++) {
+            result += this.getZeros(this.shape.columns -1-i) + Double.toString(this.getValue(this.shape.columns -1-i)) + " "
+                    + this.getZeros(i) + "\n";
+        }
+        return result;
     }
 
 }

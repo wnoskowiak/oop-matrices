@@ -7,24 +7,23 @@ public class DoubleMatrixFactory {
   }
 
   public static IDoubleMatrix sparse(Shape shape, MatrixCellValue... values) {
-    return Sparse.newSparse(shape,values);
-     // Tu trzeba wpisać właściwą instrukcję
+    return Sparse.makeSparse(shape,values);
   }
 
   public static IDoubleMatrix full(double[][] values) {
-    return Full.MakeFull(values);
+    return Full.makeFull(values);
   }
 
   public static IDoubleMatrix identity(int size) {
-    return new Identity(size);
+    return Identity.makeIdentity(size);
   }
 
   public static IDoubleMatrix diagonal(double... diagonalValues) {
-    return new Diagonal(diagonalValues);
+    return Diagonal.makeDiagonal(diagonalValues);
   }
 
   public static IDoubleMatrix antiDiagonal(double... antiDiagonalValues) {
-    return new AntiDiagonal(antiDiagonalValues);
+    return AntiDiagonal.makeAntiDiagonal(antiDiagonalValues);
   }
 
   public static IDoubleMatrix vector(double... values) {
@@ -36,6 +35,18 @@ public class DoubleMatrixFactory {
   }
 
   public static IDoubleMatrix zero(Shape shape) {
-    return new Zero(shape);
+    return Zero.makeZero(shape);
+  }
+
+  public static IDoubleMatrix constant(Shape shape,double value) {
+    return Constant.makeConstant(shape, value);
+  }
+
+  public static IDoubleMatrix constantColumn(int rows, double... rowValues) {
+    return ConstantColumn.makeConstantColumn(rows, rowValues);
+  }
+
+  public static IDoubleMatrix constantRow(int columns, double... rowValues) {
+    return ConstantRow.makeConstantRow(columns, rowValues);
   }
 }

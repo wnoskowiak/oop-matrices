@@ -6,5 +6,7 @@ public abstract class GenericDegeneratedMatrix extends GenericMatrix{
         super(shape);
     }
 
+    protected abstract IDoubleMatrix switchData(double... data);
+
     abstract protected double getValue(int i);
 }

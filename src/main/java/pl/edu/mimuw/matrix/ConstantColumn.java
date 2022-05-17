@@ -1,23 +1,27 @@
 package pl.edu.mimuw.matrix;
 
-public class ConstantRow extends OneDimDegenerated {
+public class ConstantColumn extends OneDimDegenerated{
 
-    ConstantRow(int columns, double... rowValues) {
-        super(Shape.matrix(rowValues.length, columns),rowValues);
+    private ConstantColumn(int rows, double... rowValues) {
+        super(Shape.matrix(rows,rowValues.length),rowValues);
     }
 
-    public static ConstantRow makeConstantRow(int rows, double... rowValues){
+    public static ConstantColumn makeConstantColumn(int rows, double... rowValues){
         assert rows > 0 & rowValues.length>0;
-        return new ConstantRow(rows,rowValues);
+        return new ConstantColumn(rows,rowValues);
+    }
+
+    public IDoubleMatrix getCopy() {
+        return new ConstantRow(this.shape.rows, this.values);
     }
 
     protected IDoubleMatrix switchData(double... data){
-        return new ConstantRow(this.shape.columns, data);
+        return new ConstantColumn(this.shape.rows, data);
     }
 
     public double get(int row, int column) {
         this.assertGet(row, column);
-        return this.getValue(row);
+        return this.getValue(column);
     }
 
     public IDoubleMatrix plus(IDoubleMatrix other){
@@ -33,7 +37,7 @@ public class ConstantRow extends OneDimDegenerated {
         double[][] newData = other.data();
         for (int i = 0; i < this.shape.rows; i++) {
             for (int j = 0; j < this.shape.columns; j++) {
-                newData[i][j] += this.getValue(i);
+                newData[i][j] += this.getValue(j);
             }
         }
         return DoubleMatrixFactory.full(newData);
@@ -54,9 +58,9 @@ public class ConstantRow extends OneDimDegenerated {
             for (int j = 0; j < newShape.columns; j++) {
                 temp = 0;
                 for (int k = 0; k < this.shape.columns; k++) {
-                    temp += other.get(k, j);
+                    temp += this.getValue(k) * other.get(k, j);
                 }
-                newData[i][j] = this.getValue(i)*temp;
+                newData[i][j] = temp;
             }
         }
         return DoubleMatrixFactory.full(newData);
@@ -64,36 +68,37 @@ public class ConstantRow extends OneDimDegenerated {
 
     public double frobeniusNorm() {
         double result = 0;
-        for (int i = 0; i < this.shape.rows; i++) {
+        for (int i = 0; i < this.shape.columns; i++) {
 
-            result += this.shape.columns * (this.getValue(i)) * (this.getValue(i));
+            result += this.shape.rows * (this.getValue(i)) * (this.getValue(i));
         }
         return Math.sqrt(result);
     }
 
     public double normOne() {
+
+        double max = 0;
+        for (int i = 0; i < this.shape.columns; i++) {
+            max = Double.max(max, Math.abs(this.getValue(i)));
+        }
+        return this.shape.rows * max;
+    }
+
+    public double normInfinity() {
         double temp = 0;
-        for (int j = 0; j < this.shape.rows; j++) {
+        for (int j = 0; j < this.shape.columns; j++) {
             temp += Math.abs(this.getValue(j));
         }
         return temp;
     }
 
-    public double normInfinity() {
-        double max = 0;
-        for (int i = 0; i < this.shape.rows; i++) {
-            max = Double.max(max, Math.abs(this.getValue(i)));
-        }
-        return this.shape.columns * max;
-    }
-
     public String toString() {
-
-        String result = "";
-        for (int i = 0; i < this.shape.rows; i++) {
-            result += this.getChar(this.shape.columns,Double.toString(this.getValue(i)))+ "\n";
+        String helpeString = "";
+        for(double elem : this.values){
+            helpeString += Double.toString(elem)+" ";
         }
-        return result;
+        helpeString += "\n";
+        return new String(new char[this.shape().rows]).replace("\0", helpeString);
     }
-
+    
 }

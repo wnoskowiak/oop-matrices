@@ -2,8 +2,13 @@ package pl.edu.mimuw.matrix;
 
 public class Zero extends Constant {
 
-    public Zero(Shape shape) {
+    private Zero(Shape shape) {
         super(shape, 0);
+    }
+
+    public static Zero makeZero(Shape shape){
+        assert shape.rows >0 & shape.columns >0;
+        return new Zero(shape);
     }
 
     @Override
@@ -42,4 +47,14 @@ public class Zero extends Constant {
     public double frobeniusNorm() {
         return 0;
     }
+    
+    public String toString() {
+
+        String result = "";
+        for (int i = 0; i < this.shape.rows; i++) {
+            result += this.getChar(this.shape.columns,"0")+ "\n";
+        }
+        return result;
+    }
+
 }

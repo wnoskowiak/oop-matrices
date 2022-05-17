@@ -2,25 +2,27 @@ package pl.edu.mimuw.matrix;
 
 public class Diagonal extends GenericDiagonal {
 
-    private final double[] diagonalValues;
+    private Diagonal(double... diagonalValues) {
+        super(diagonalValues.length, diagonalValues);
+    }
 
-    protected Diagonal(double... diagonalValues) {
-        super(diagonalValues.length);
-        this.diagonalValues = diagonalValues;
+    public static Diagonal makeDiagonal(double... diagonalValues){
+        assert diagonalValues.length > 0;
+        return new Diagonal(diagonalValues);
+    }
+
+    protected IDoubleMatrix switchData(double... data){
+        return new Diagonal(data);
     }
 
     public IDoubleMatrix getCopy() {
-        return DoubleMatrixFactory.diagonal(this.diagonalValues);
-    }
-
-    protected double getValue(int index) {
-        return this.diagonalValues[index];
+        return DoubleMatrixFactory.diagonal(this.values);
     }
 
     public IDoubleMatrix times(IDoubleMatrix other) {
         assertTimes(other);
         if (other.getClass().equals(Identity.class)) {
-            return DoubleMatrixFactory.diagonal(this.diagonalValues);
+            return DoubleMatrixFactory.diagonal(this.values);
         }
         if (other.getClass().equals(this.getClass())) {
             double[] newDiagonalValues = new double[this.shape.rows];
@@ -49,7 +51,7 @@ public class Diagonal extends GenericDiagonal {
 
     public double normOne() {
         double max = Double.NEGATIVE_INFINITY;
-        for (double cur : this.diagonalValues) {
+        for (double cur : this.values) {
             max = Math.max(max, Math.abs(cur));
         }
         return max;
@@ -61,10 +63,9 @@ public class Diagonal extends GenericDiagonal {
 
     public double frobeniusNorm() {
         double result = 0;
-        for (double cur : this.diagonalValues) {
+        for (double cur : this.values) {
             result += cur * cur;
         }
         return Math.sqrt(result);
     }
-
 }

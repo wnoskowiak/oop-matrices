@@ -29,8 +29,35 @@ public abstract class GenericMatrix implements IDoubleMatrix {
         if (scalar == 0) {
             return this.getCopy();
         }
-        Constant temp = new Constant(this.shape, scalar);
+        Constant temp = Constant.makeConstant(this.shape, scalar);
         return temp.plus(this);
+    }
+
+    protected String getChar(int i, String cha) {
+        switch (i) {
+            case 0:
+                return "";
+            case 1:
+                return cha+" ";
+            case 2:
+                return cha+" "+cha+" ";
+            default:
+                return cha+" ··· "+cha+" ";
+        }
+    }
+
+    public String toString() {
+
+        String result = "", temp;
+        for (int i = 0; i < this.shape.rows; i++) {
+            temp = "";
+            for(int j = 0; j<this.shape.columns; j++){
+                temp += Double.toString(this.get(i,j)) + " ";
+            }
+            temp += "\n";
+            result += temp;
+        }
+        return result;
     }
 
 

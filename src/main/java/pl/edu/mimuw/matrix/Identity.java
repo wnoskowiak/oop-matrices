@@ -17,7 +17,7 @@ public class Identity extends GenericDiagonal{
 
     public IDoubleMatrix times(double scalar) {
         if (scalar == 0) {
-            return DoubleMatrixFactory.zero(this.shape);
+            return Zero.makeZero(this.shape);
         }
         if (scalar == 1) {
             return new Identity(this.shape.rows);

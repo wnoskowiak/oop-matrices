@@ -17,13 +17,13 @@ public abstract class GenericDiagonal extends OneDimDegenerated {
             for (int i = 0; i < this.shape.rows; i++) {
                 newDiagonalValues[i] = this.getValue(i) + temp.getValue(i);
             }
-            return DoubleMatrixFactory.diagonal(newDiagonalValues);
+            return Diagonal.makeDiagonal(newDiagonalValues);
         }
         double[][] newData = other.data();
         for (int i = 0; i < this.shape.rows; i++) {
             newData[i][i] += getValue(i);
         }
-        return DoubleMatrixFactory.full(newData);
+        return Full.makeFull(newData);
     }
 
     public double get(int row, int column) {
@@ -35,7 +35,7 @@ public abstract class GenericDiagonal extends OneDimDegenerated {
     }
 
     public String toString() {
-
+        printDimentions();
         String result = "";
         for (int i = 0; i < this.shape.rows; i++) {
             result += this.getChar(i,"0") + Double.toString(this.getValue(i)) + " "

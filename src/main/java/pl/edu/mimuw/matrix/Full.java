@@ -24,7 +24,7 @@ public class Full extends GenericMatrix {
     }
 
     public IDoubleMatrix getCopy() {
-        return DoubleMatrixFactory.full(this.data);
+        return Full.makeFull(this.data);
     }
 
     public double get(int row, int column) {
@@ -34,7 +34,7 @@ public class Full extends GenericMatrix {
 
     public IDoubleMatrix times(double scalar) {
         if (scalar == 0) {
-            return DoubleMatrixFactory.zero(this.shape);
+            return Zero.makeZero(this.shape);
         }
         if (scalar == 1) {
             return this.getCopy();
@@ -45,7 +45,7 @@ public class Full extends GenericMatrix {
                 newData[i][j] *= scalar;
             }
         }
-        return DoubleMatrixFactory.full(newData);
+        return Full.makeFull(newData);
     }
 
     public IDoubleMatrix plus(IDoubleMatrix other) {
@@ -60,7 +60,7 @@ public class Full extends GenericMatrix {
                 newData[i][j] += other.get(i,j);
             }
         }
-        return DoubleMatrixFactory.full(newData);
+        return Full.makeFull(newData);
     }
 
     public IDoubleMatrix times(IDoubleMatrix other) {
@@ -75,9 +75,8 @@ public class Full extends GenericMatrix {
                 for (int j = 0; j < this.shape.columns; j++) {
                     newData[i][j] *= newOther.getValue(j);
                 }
-
             }
-            return DoubleMatrixFactory.full(newData);
+            return Full.makeFull(newData);
         }
         Shape newShape = this.shape.shapeAfterMultiply(other.shape());
         double[][] newData = new double[newShape.rows][newShape.columns];
@@ -91,7 +90,7 @@ public class Full extends GenericMatrix {
                 newData[i][j] = temp;
             }
         }
-        return DoubleMatrixFactory.full(newData);
+        return Full.makeFull(newData);
     }
 
     public double frobeniusNorm() {

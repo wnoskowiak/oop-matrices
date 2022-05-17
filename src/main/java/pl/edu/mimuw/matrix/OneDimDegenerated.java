@@ -19,7 +19,7 @@ public abstract class OneDimDegenerated extends GenericDegeneratedMatrix {
 
     public IDoubleMatrix times(double scalar) {
         if (scalar == 0) {
-            return DoubleMatrixFactory.zero(this.shape);
+            return Zero.makeZero(this.shape);
         }
         if (scalar == 1) {
             return this.getCopy();

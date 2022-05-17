@@ -36,7 +36,7 @@ public class ConstantRow extends OneDimDegenerated {
                 newData[i][j] += this.getValue(i);
             }
         }
-        return DoubleMatrixFactory.full(newData);
+        return Full.makeFull(newData);
     }
 
     public IDoubleMatrix times(IDoubleMatrix other){
@@ -46,7 +46,7 @@ public class ConstantRow extends OneDimDegenerated {
         }
         Shape newShape = this.shape.shapeAfterMultiply(other.shape());
         if(other.getClass().equals(Zero.class)){
-            return DoubleMatrixFactory.zero(newShape);
+            return Zero.makeZero(newShape);
         }
         double[][] newData = new double[newShape.rows][newShape.columns];
         double temp;
@@ -59,7 +59,7 @@ public class ConstantRow extends OneDimDegenerated {
                 newData[i][j] = this.getValue(i)*temp;
             }
         }
-        return DoubleMatrixFactory.full(newData);
+        return Full.makeFull(newData);
     }
 
     public double frobeniusNorm() {
@@ -88,7 +88,7 @@ public class ConstantRow extends OneDimDegenerated {
     }
 
     public String toString() {
-
+        printDimentions();
         String result = "";
         for (int i = 0; i < this.shape.rows; i++) {
             result += this.getChar(this.shape.columns,Double.toString(this.getValue(i)))+ "\n";

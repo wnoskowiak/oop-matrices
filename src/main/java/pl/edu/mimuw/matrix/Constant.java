@@ -60,7 +60,7 @@ public class Constant extends ZeroDimDegenerated {
                 newData[i][j] = this.getValue()*temp;
             }
         }
-        return DoubleMatrixFactory.full(newData);
+        return Full.makeFull(newData);
     }
 
     public double frobeniusNorm() {
@@ -76,6 +76,7 @@ public class Constant extends ZeroDimDegenerated {
     }
 
     public String toString() {
+        printDimentions();
         String helpeString = this.getChar(this.shape.columns,Double.toString(this.getValue())) + "\n";
         return new String(new char[this.shape().rows]).replace("\0", helpeString);
     }

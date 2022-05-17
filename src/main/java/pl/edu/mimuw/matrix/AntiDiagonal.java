@@ -3,7 +3,7 @@ package pl.edu.mimuw.matrix;
 public class AntiDiagonal extends OneDimDegenerated{
 
     public IDoubleMatrix getCopy(){
-        return DoubleMatrixFactory.antiDiagonal(this.values);
+        return AntiDiagonal.makeAntiDiagonal(this.values);
     }
 
     private AntiDiagonal(double... diagonalValues) {
@@ -16,7 +16,7 @@ public class AntiDiagonal extends OneDimDegenerated{
     }
 
     protected IDoubleMatrix switchData(double... data){
-        return DoubleMatrixFactory.antiDiagonal(data);
+        return AntiDiagonal.makeAntiDiagonal(data);
     }
 
     protected double getValue(int index) {
@@ -42,19 +42,19 @@ public class AntiDiagonal extends OneDimDegenerated{
             for (int i = 0; i < this.shape.rows; i++) {
                 newAntiDiagonalValues[i] = this.getValue(i) + temp.getValue(i);
             }
-            return DoubleMatrixFactory.antiDiagonal(newAntiDiagonalValues);
+            return AntiDiagonal.makeAntiDiagonal(newAntiDiagonalValues);
         }
         double[][] newData = other.data();
         for (int i = 0; i < this.shape.rows; i++) {
             newData[i][(this.shape.columns-1-i)] += getValue(i);
         }
-        return DoubleMatrixFactory.full(newData);
+        return Full.makeFull(newData);
     }
 
     public IDoubleMatrix times(IDoubleMatrix other) {
         assertTimes(other);
         if (other.getClass().equals(Identity.class)) {
-            return DoubleMatrixFactory.antiDiagonal(this.values);
+            return AntiDiagonal.makeAntiDiagonal(this.values);
         }
         if (other.getClass().equals(this.getClass())) {
             double[] newDiagonalValues = new double[this.shape.rows];
@@ -62,7 +62,7 @@ public class AntiDiagonal extends OneDimDegenerated{
             for (int i = 0; i < this.shape.rows; i++) {
                 newDiagonalValues[i] = this.getValue(i) * temp.getValue(this.shape.rows-1-i);
             }
-            return DoubleMatrixFactory.diagonal(newDiagonalValues);
+            return Diagonal.makeDiagonal(newDiagonalValues);
         }
         if (other.getClass().equals(Diagonal.class)){
             double[] newAntiDiagonalValues = new double[this.shape.rows];
@@ -70,7 +70,7 @@ public class AntiDiagonal extends OneDimDegenerated{
             for (int i = 0; i < this.shape.rows; i++) {
                 newAntiDiagonalValues[i] = this.getValue(i) * temp.getValue(this.shape.rows-1-i);
             }
-            return DoubleMatrixFactory.antiDiagonal(newAntiDiagonalValues);
+            return AntiDiagonal.makeAntiDiagonal(newAntiDiagonalValues);
         }
         double[][] newData = other.data();
         double[] temp;
@@ -84,7 +84,7 @@ public class AntiDiagonal extends OneDimDegenerated{
                 newData[i][j] *= this.getValue(i);
             }
         }
-        return DoubleMatrixFactory.full(newData);
+        return Full.makeFull(newData);
     }
 
     public double normOne() {
@@ -121,7 +121,7 @@ public class AntiDiagonal extends OneDimDegenerated{
     }
 
     public String toString() {
-
+        printDimentions();
         String result = "";
         for (int i = 0; i < this.shape.rows; i++) {
             result += this.getZeros(this.shape.columns -1-i) + Double.toString(this.getValue(this.shape.columns -1-i)) + " "

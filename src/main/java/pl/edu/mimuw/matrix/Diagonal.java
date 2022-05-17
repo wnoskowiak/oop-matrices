@@ -16,13 +16,13 @@ public class Diagonal extends GenericDiagonal {
     }
 
     public IDoubleMatrix getCopy() {
-        return DoubleMatrixFactory.diagonal(this.values);
+        return Diagonal.makeDiagonal(this.values);
     }
 
     public IDoubleMatrix times(IDoubleMatrix other) {
         assertTimes(other);
         if (other.getClass().equals(Identity.class)) {
-            return DoubleMatrixFactory.diagonal(this.values);
+            return Diagonal.makeDiagonal(this.values);
         }
         if (other.getClass().equals(this.getClass())) {
             double[] newDiagonalValues = new double[this.shape.rows];
@@ -30,7 +30,7 @@ public class Diagonal extends GenericDiagonal {
             for (int i = 0; i < this.shape.rows; i++) {
                 newDiagonalValues[i] = this.getValue(i) * temp.getValue(i);
             }
-            return DoubleMatrixFactory.diagonal(newDiagonalValues);
+            return Diagonal.makeDiagonal(newDiagonalValues);
         }
         if (other.getClass().equals(AntiDiagonal.class)) {
             double[] newAntiDiagonalValues = new double[this.shape.rows];
@@ -38,7 +38,7 @@ public class Diagonal extends GenericDiagonal {
             for(int i =0; i<this.shape.rows; i++){
                 newAntiDiagonalValues[i]=this.getValue(i)*temp.getValue(i);
             }
-            return DoubleMatrixFactory.antiDiagonal(newAntiDiagonalValues);
+            return AntiDiagonal.makeAntiDiagonal(newAntiDiagonalValues);
         }
         double[][] newData = other.data();
         for (int i = 0; i < this.shape.rows; i++) {
@@ -46,7 +46,7 @@ public class Diagonal extends GenericDiagonal {
                 newData[i][j] *= getValue(i);
             }
         }
-        return DoubleMatrixFactory.full(newData);
+        return Full.makeFull(newData);
     }
 
     public double normOne() {

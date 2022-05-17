@@ -13,13 +13,13 @@ public class Zero extends Constant {
 
     @Override
     public IDoubleMatrix getCopy() {
-        return DoubleMatrixFactory.zero(this.shape);
+        return Zero.makeZero(this.shape);
     }
 
     @Override
     public IDoubleMatrix times(IDoubleMatrix other) {
         shape.assertMultiplyable(other.shape());
-        return DoubleMatrixFactory.zero(shape.shapeAfterMultiply(other.shape()));
+        return Zero.makeZero(shape.shapeAfterMultiply(other.shape()));
     }
 
     @Override
@@ -49,7 +49,7 @@ public class Zero extends Constant {
     }
     
     public String toString() {
-
+        printDimentions();
         String result = "";
         for (int i = 0; i < this.shape.rows; i++) {
             result += this.getChar(this.shape.columns,"0")+ "\n";

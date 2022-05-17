@@ -16,6 +16,7 @@ public class Sparse extends GenericMatrix{
     }
 
     public static Sparse makeSparse(Shape shape, MatrixCellValue... values){
+        assert values.length>0;
         for(MatrixCellValue elem : values){
             shape.assertInShape(elem.row,elem.column);
         }
@@ -96,7 +97,7 @@ public class Sparse extends GenericMatrix{
         for(MatrixCellValue elem : this.values) {
             newData[elem.row][elem.column] += elem.value;
         }
-        return DoubleMatrixFactory.full(newData);
+        return Full.makeFull(newData);
     }
 
     public IDoubleMatrix times(double scalar) {
@@ -105,7 +106,7 @@ public class Sparse extends GenericMatrix{
             MatrixCellValue temp = this.values.get(i);
             newValues[i] = new MatrixCellValue(temp.row, temp.column, temp.value*scalar);
         }
-        return DoubleMatrixFactory.sparse(this.shape, newValues);
+        return Sparse.makeSparse(this.shape, newValues);
     }
 
     // public IDoubleMatrix plus(double scalar) {

@@ -46,8 +46,12 @@ public abstract class GenericMatrix implements IDoubleMatrix {
         }
     }
 
-    public String toString() {
+    public void printDimentions(){
+        System.out.println("Dimentions: " + Integer.toString(this.shape.rows) + "x" + Integer.toString(this.shape.columns) + "\n");
+    }
 
+    public String toString() {
+        printDimentions();
         String result = "", temp;
         for (int i = 0; i < this.shape.rows; i++) {
             temp = "";

@@ -6,12 +6,21 @@ public class Full extends GenericMatrix {
 
     protected final double[][] data;
 
-    public Full(double[][] values) {
+    private Full(double[][] values) {
         super(Shape.matrix(values.length, values[0].length));
         data = new double[values.length][values[0].length];
         for (int i = 0; i < data.length; i++) {
             data[i] = Arrays.copyOf(values[i], values[i].length);
         }
+    }
+
+    public static Full MakeFull(double[][] values){
+        assert values != null;
+        assert (values.length!=0);
+        for(int i = 1; i<values.length; i++){
+            assert values[i-1].length == values[i].length;
+        }
+        return new Full(values);
     }
 
     public IDoubleMatrix getCopy() {
@@ -37,7 +46,6 @@ public class Full extends GenericMatrix {
             }
         }
         return DoubleMatrixFactory.full(newData);
-
     }
 
     public IDoubleMatrix plus(IDoubleMatrix other) {
@@ -55,17 +63,17 @@ public class Full extends GenericMatrix {
         return DoubleMatrixFactory.full(newData);
     }
 
-    public IDoubleMatrix plus(double scalar) {
-        this.assertPlus(scalar);
-        if (scalar == 0) {
-            return this.getCopy();
-        }
-        double[][] newData = this.data();
-        for (int i = 0; i < this.shape.rows; i++) {
-            newData[i][i] += scalar;
-        }
-        return DoubleMatrixFactory.full(newData);
-    }
+    // public IDoubleMatrix plus(double scalar) {
+    //     // this.assertPlus(scalar);
+    //     if (scalar == 0) {
+    //         return this.getCopy();
+    //     }
+    //     double[][] newData = this.data();
+    //     for (int i = 0; i < this.shape.rows; i++) {
+    //         newData[i][i] += scalar;
+    //     }
+    //     return DoubleMatrixFactory.full(newData);
+    // }
 
     public IDoubleMatrix times(IDoubleMatrix other) {
         this.assertTimes(other);
@@ -77,7 +85,7 @@ public class Full extends GenericMatrix {
             Diagonal newOther = (Diagonal) other;
             for (int i = 0; i < this.shape.rows; i++) {
                 for (int j = 0; j < this.shape.columns; j++) {
-                    newData[i][j] *= newOther.getDiagonalValues(j);
+                    newData[i][j] *= newOther.getValue(j);
                 }
 
             }
@@ -101,15 +109,15 @@ public class Full extends GenericMatrix {
     public double frobeniusNorm() {
         double result = 0;
         for (int i = 0; i < this.shape.rows; i++) {
-            for (int j = 0; j < this.shape.rows; j++) {
-                result += this.data[i][j];
+            for (int j = 0; j < this.shape.columns; j++) {
+                result += (this.data[i][j])*(this.data[i][j]);
             }
         }
         return Math.sqrt(result);
     }
 
     public double normOne() {
-        double max = Double.NEGATIVE_INFINITY, temp;
+        double max = 0, temp;
         for (int i = 0; i < this.shape.columns; i++) {
             temp = 0;
             for (int j = 0; j < this.shape.rows; j++) {
@@ -121,7 +129,7 @@ public class Full extends GenericMatrix {
     }
 
     public double normInfinity() {
-        double max = Double.NEGATIVE_INFINITY, temp;
+        double max = 0, temp;
         for (int i = 0; i < this.shape.rows; i++) {
             temp = 0;
             for (int j = 0; j < this.shape.columns; j++) {

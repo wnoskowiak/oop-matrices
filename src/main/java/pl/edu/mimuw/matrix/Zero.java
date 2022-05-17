@@ -1,63 +1,45 @@
 package pl.edu.mimuw.matrix;
 
-public class Zero extends GenericMatrix {
+public class Zero extends Constant {
 
     public Zero(Shape shape) {
-        super(shape);
+        super(shape, 0);
     }
 
+    @Override
     public IDoubleMatrix getCopy() {
         return DoubleMatrixFactory.zero(this.shape);
     }
 
+    @Override
     public IDoubleMatrix times(IDoubleMatrix other) {
         shape.assertMultiplyable(other.shape());
         return DoubleMatrixFactory.zero(shape.shapeAfterMultiply(other.shape()));
     }
 
+    @Override
     public IDoubleMatrix times(double scalar) {
         return this.getCopy();
     }
 
+    @Override
     public IDoubleMatrix plus(IDoubleMatrix other) {
         this.assertPlus(other);
         return other.getCopy();
     }
 
-    public IDoubleMatrix plus(double scalar) {
-        this.assertPlus(scalar);
-        return DoubleMatrixFactory.diagonal(scalar);
-    }
-
-    public double get(int row, int column) {
-        this.assertGet(row, column);
-        return 0;
-    }
-
+    @Override
     public double normOne() {
         return 0;
     }
 
+    @Override
     public double normInfinity() {
         return 0;
     }
 
+    @Override
     public double frobeniusNorm() {
         return 0;
-    }
-
-    public String toString() {
-        String helpeString;
-        switch (this.shape().columns) {
-            case 1:
-                helpeString = "0";
-                break;
-            case 2:
-                helpeString = "00";
-                break;
-            default:
-                helpeString = "0···0";
-        }
-        return new String(new char[this.shape().rows]).replace("\0", helpeString);
     }
 }

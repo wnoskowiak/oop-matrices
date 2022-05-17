@@ -1,19 +1,17 @@
 package pl.edu.mimuw.matrix;
 
-public abstract class GenericDiagonal extends GenericMatrix {
+public abstract class GenericDiagonal extends GenericDegeneratedMatrix {
 
     public GenericDiagonal(int size) {
         super(Shape.matrix(size, size));
     }
-
-    protected abstract double getDiagonalValues(int index);
 
     public double get(int row, int column) {
         this.assertGet(row, column);
         if (row != column) {
             return 0;
         }
-        return getDiagonalValues(row);
+        return getValue(row);
     }
 
     public IDoubleMatrix times(double scalar) {
@@ -22,7 +20,7 @@ public abstract class GenericDiagonal extends GenericMatrix {
         }
         double[] newDiagonalValues = new double[this.shape.rows];
         for (int i = 0; i < this.shape.rows; i++) {
-            newDiagonalValues[i] = scalar * this.getDiagonalValues(i);
+            newDiagonalValues[i] = scalar * this.getValue(i);
         }
         return DoubleMatrixFactory.diagonal(newDiagonalValues);
     }
@@ -36,13 +34,13 @@ public abstract class GenericDiagonal extends GenericMatrix {
             GenericDiagonal temp = (GenericDiagonal) other;
             double[] newDiagonalValues = new double[this.shape.rows];
             for (int i = 0; i < this.shape.rows; i++) {
-                newDiagonalValues[i] = this.getDiagonalValues(i) + temp.getDiagonalValues(i);
+                newDiagonalValues[i] = this.getValue(i) + temp.getValue(i);
             }
             return DoubleMatrixFactory.diagonal(newDiagonalValues);
         }
         double[][] newData = other.data();
         for (int i = 0; i < this.shape.rows; i++) {
-            newData[i][i] += getDiagonalValues(i);
+            newData[i][i] += getValue(i);
         }
         return DoubleMatrixFactory.full(newData);
     }
@@ -53,7 +51,7 @@ public abstract class GenericDiagonal extends GenericMatrix {
         }
         double[] newDiagonalValues = new double[this.shape.rows];
         for (int i = 0; i < this.shape.rows; i++) {
-            newDiagonalValues[i] = scalar + this.getDiagonalValues(i);
+            newDiagonalValues[i] = scalar + this.getValue(i);
         }
         return DoubleMatrixFactory.diagonal(newDiagonalValues);
     }
@@ -75,7 +73,7 @@ public abstract class GenericDiagonal extends GenericMatrix {
 
         String result = "";
         for (int i = 0; i < this.shape.rows; i++) {
-            result += this.getZeros(i) + Double.toString(this.getDiagonalValues(i)) + " "
+            result += this.getZeros(i) + Double.toString(this.getValue(i)) + " "
                     + this.getZeros(this.shape.columns - i) + "\n";
         }
         return result;

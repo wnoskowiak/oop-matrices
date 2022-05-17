@@ -9,7 +9,7 @@ public class Identity extends GenericDiagonal{
         return DoubleMatrixFactory.identity(this.shape.columns);
     }
 
-    protected double getDiagonalValues(int index){
+    protected double getValue(int index){
         return 1;
     }
 

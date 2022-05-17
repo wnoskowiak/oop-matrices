@@ -13,7 +13,7 @@ public class Diagonal extends GenericDiagonal {
         return DoubleMatrixFactory.diagonal(this.diagonalValues);
     }
 
-    protected double getDiagonalValues(int index) {
+    protected double getValue(int index) {
         return this.diagonalValues[index];
     }
 
@@ -26,14 +26,22 @@ public class Diagonal extends GenericDiagonal {
             double[] newDiagonalValues = new double[this.shape.rows];
             Diagonal temp = (Diagonal) other;
             for (int i = 0; i < this.shape.rows; i++) {
-                newDiagonalValues[i] = this.getDiagonalValues(i) * temp.getDiagonalValues(i);
+                newDiagonalValues[i] = this.getValue(i) * temp.getValue(i);
             }
             return DoubleMatrixFactory.diagonal(newDiagonalValues);
+        }
+        if (other.getClass().equals(AntiDiagonal.class)) {
+            double[] newAntiDiagonalValues = new double[this.shape.rows];
+            AntiDiagonal temp = (AntiDiagonal) other;
+            for(int i =0; i<this.shape.rows; i++){
+                newAntiDiagonalValues[i]=this.getValue(i)*temp.getValue(i);
+            }
+            return DoubleMatrixFactory.antiDiagonal(newAntiDiagonalValues);
         }
         double[][] newData = other.data();
         for (int i = 0; i < this.shape.rows; i++) {
             for (int j = 0; j < this.shape.columns; j++) {
-                newData[i][j] *= getDiagonalValues(i);
+                newData[i][j] *= getValue(i);
             }
         }
         return DoubleMatrixFactory.full(newData);
@@ -42,7 +50,7 @@ public class Diagonal extends GenericDiagonal {
     public double normOne() {
         double max = Double.NEGATIVE_INFINITY;
         for (double cur : this.diagonalValues) {
-            max = Math.max(max, cur);
+            max = Math.max(max, Math.abs(cur));
         }
         return max;
     }
